@@ -160,12 +160,7 @@ def build_answer(message, profile, knowledge):
     if duration != "未填写":
         advice = f"结合你备孕时长是{duration}" + ("、" if advice else "，") + advice.lstrip("，")
 
-    return (
-        f"1. 直接回答：{direct}\n\n"
-        f"2. 解释原因：{explain}\n\n"
-        f"3. 结合档案建议：{advice}\n\n"
-        f"4. 下一步动作：你也可以继续补充档案、上传报告，或者让我帮你匹配医生和预约问诊。"
-    )
+    return f"{direct} {explain} {advice} 你也可以继续补充档案、上传报告，或者让我帮你匹配医生和预约问诊。"
 
 
 class Handler(BaseHTTPRequestHandler):

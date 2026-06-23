@@ -3309,12 +3309,7 @@
         if (hasCondition !== null && hasCondition !== undefined) profileText.push(hasCondition ? "有相关情况" : "暂未填写相关情况");
         if (conditions) profileText.push("已填写：" + conditions);
         var profileLine = profileText.length ? "当前档案：" + profileText.join("，") + "。" : "当前档案还可以继续补充。";
-        return [
-          direct,
-          explain,
-          profileLine + advice,
-          nextStep
-        ].join("\n\n");
+        return direct + " " + explain + " " + profileLine + advice + " " + nextStep;
       }
 
       async function sendChatMessageNow(text, options) {
