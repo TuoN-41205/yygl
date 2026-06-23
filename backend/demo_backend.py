@@ -127,45 +127,45 @@ def build_answer(message, profile, knowledge):
     conditions = (profile or {}).get("conditions") or []
     condition_text = "、".join(conditions) if conditions else "暂无"
     knowledge_hint = pick_knowledge_hint(message, knowledge)
-
-    opener = [
-        f"你问的是「{message[:24]}」",
-        f"我先按备孕管理帮你捋清楚"
-    ]
-    if age is not None:
-        opener.append(f"你现在{age}岁")
-    if duration != "未填写":
-        opener.append(f"备孕时长是{duration}")
-
-    body = []
+    direct = ""
+    explain = ""
+    advice = ""
+    next_step = "你也可以继续补充档案、上传报告，或者让我帮你匹配医生和预约问诊。"
     if "叶酸" in message:
-        body.append("叶酸一般属于备孕基础补充，重点不是“越多越好”，而是剂量、开始时间和你是否有特殊情况。")
-        body.append("如果没有特殊医嘱，通常先把备孕节奏、饮食和既往用药一起看，再决定怎么补更合适。")
+        direct = "备孕阶段一般建议优先保证叶酸补充。"
+        explain = "叶酸的核心是看剂量、开始时间和你是否有特殊情况，通常不建议只按“补得越多越好”来理解。"
+        advice = "结合你的年龄、备孕时长和既往情况来看，先把基础档案补完整，再细化饮食和补充方案会更稳妥。"
     elif "amh" in message.lower():
-        body.append("AMH 偏低不等于一定没机会，更重要的是结合月经情况、卵巢储备和你备孕了多久一起看。")
-        body.append("如果你已经备孕一段时间，建议把最近的性激素、B 超或既往促排情况也补上，判断会更稳。")
+        direct = "AMH 偏低更适合作为备孕参考，不建议单独下结论。"
+        explain = "它通常需要和年龄、基础卵泡数、月经情况以及其他激素指标一起综合判断。"
+        advice = "如果你已经备孕一段时间，建议把最近的性激素、B 超或既往促排情况也补上，判断会更稳。"
     elif "月经" in message:
-        body.append("月经不规律会让排卵时间更难判断，所以先把周期、经期天数、痛经情况和是否有明显波动说清楚很重要。")
-        body.append("如果你本身还有多囊、体重波动或熬夜压力大，这些也会影响判断。")
+        direct = "月经不规律时，先别急着下结论，建议先系统梳理原因。"
+        explain = "常见会和排卵不稳定、周期波动、痛经、体重变化、压力或多囊卵巢等情况相关。"
+        advice = "结合你的年龄、备孕时长、AMH 和基础卵泡情况一起看，会比单看月经表现更准确。"
     elif "促排" in message:
-        body.append("促排前不建议只盯着一个检查，通常要结合卵巢功能、激素水平、超声和既往情况一起看。")
-        body.append("你可以继续把既往检查结果发我，我帮你整理出下一步更该看什么。")
+        direct = "如果进入促排或试管前准备阶段，先把基础信息和检查资料整理完整最重要。"
+        explain = "这类阶段通常不是只看一个指标，而是看卵巢功能、激素、超声和既往治疗情况一起判断。"
+        advice = "把基础档案、既往检查和医生关注的问题先准备好，后续更容易判断下一步。"
     else:
-        body.append(f"我会结合你现在的档案和知识库里的「{knowledge_hint}」给你更贴近实际的建议。")
-        body.append("如果你愿意继续补充月经、检查报告或既往治疗情况，我能帮你把下一步梳理得更细。")
+        direct = "我可以先根据你现有信息，帮你做一个方向判断。"
+        explain = f"这类问题通常需要结合备孕阶段、检查资料和既往情况一起看，当前知识库里的「{knowledge_hint}」也会参与参考。"
+        advice = "如果你愿意继续补充月经、检查报告或既往治疗情况，我能把建议梳理得更细。"
 
     if has_condition is True:
-        body.append(f"你现在勾选的相关情况是：{condition_text}，这会影响我对问题的判断顺序。")
+        advice += f" 你现在勾选的相关情况是：{condition_text}，这会影响我对问题的判断顺序。"
 
-    tail = []
-    tail.append("如果你的情况涉及出血、腹痛、发热、妊娠异常、正在用药或考虑调整方案，这类内容要尽快转医生确认。")
-    tail.append("你也可以继续看专家团队，或者把报告拍给我，我帮你先做一版整理。")
+    if age is not None:
+        advice = f"结合你现在{age}岁" + ("、" if advice else "，") + advice.lstrip("，")
+    if duration != "未填写":
+        advice = f"结合你备孕时长是{duration}" + ("、" if advice else "，") + advice.lstrip("，")
 
-    first = "；".join(opener) + "。"
-    second = " ".join(body)
-    third = " ".join(tail[:1])
-    fourth = tail[1]
-    return f"{first}\n\n{second}\n\n{third}\n\n{fourth}"
+    return (
+        f"1. 直接回答：{direct}\n\n"
+        f"2. 解释原因：{explain}\n\n"
+        f"3. 结合档案建议：{advice}\n\n"
+        f"4. 下一步动作：你也可以继续补充档案、上传报告，或者让我帮你匹配医生和预约问诊。"
+    )
 
 
 class Handler(BaseHTTPRequestHandler):

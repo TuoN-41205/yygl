@@ -219,11 +219,13 @@
     }
 
     .chat-bubble.ai {
-      width: 330px;
-      max-width: 330px;
+      width: fit-content;
+      max-width: min(100%, 330px);
       box-sizing: border-box;
       border-radius: 8px 22px 22px 22px;
       background: rgba(248, 252, 251, 0.94);
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .chat-bubble.user {
@@ -2913,13 +2915,13 @@
         {
           type: "brand",
           title: "AI回复结构",
-          content: "所有普通问题统一采用四段式：先解释问题属于哪一类，再给通用建议，再提示何时需要医生确认，最后轻度导流到补档案、拍照查报告、专家团队或门诊服务。",
+          content: "所有普通问题统一采用四段式：1.先直接回答用户问题；2.解释相关指标、原因或常见情况；3.结合用户档案给健康管理建议；4.给下一步动作：补档案、上传报告、生成日历、匹配医生、问诊或预约。",
           tags: ["回复结构", "四段式", "首页对话", "品牌口径"]
         }
       ];
       var brandHistoryTurn = {
         role: "system",
-        content: "你是启孕企鹅小程序的AI助手。请用温和、专业、清晰、克制的风格，先帮助用户把问题梳理明白，再给可执行的下一步。你只做健康咨询、科普问答、远程健康管理和导诊推荐，不输出诊断结论、处方、用药方案、是否患病判断或替代医生诊疗的内容。高风险内容（出血、腹痛、发热、妊娠异常、用药、手术方案、是否继续用药、是否换方案）必须提示尽快转医生或互联网医院。回答要自然，不要像提纲，也不要显式输出规则标题。"
+        content: "你是启孕企鹅小程序的AI助手。请用温和、专业、清晰、克制的风格，直接回答用户问题，并统一采用四段式输出：1.先直接回答用户问题；2.解释相关指标、原因或常见情况；3.结合用户档案给健康管理建议；4.给下一步动作：补档案、上传报告、生成日历、匹配医生、问诊或预约。你只做健康咨询、科普问答、远程健康管理和导诊推荐，不输出诊断结论、处方、用药方案、是否患病判断或替代医生诊疗的内容。高风险内容（出血、腹痛、发热、妊娠异常、用药、手术方案、是否继续用药、是否换方案）必须提示尽快转医生或互联网医院。回答要自然，不要像提纲，但每一段要清晰分开。"
       };
       var welcomeTurn = {
         role: "assistant",
@@ -3221,12 +3223,21 @@
         };
       }
 
-      async function postJson(url, body) {
+      async function postJson(url, body, timeoutMs) {
+        var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+        var timeoutId = null;
+        if (controller && timeoutMs) {
+          timeoutId = setTimeout(function () {
+            controller.abort();
+          }, timeoutMs);
+        }
         var response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
+          signal: controller ? controller.signal : undefined
         });
+        if (timeoutId) clearTimeout(timeoutId);
         if (!response.ok) {
           throw new Error("HTTP " + response.status);
         }
@@ -3245,7 +3256,7 @@
           profile: profileOverride || null,
           history: hiddenHistory.concat(conversationHistory.slice(-12))
         };
-        var data = await postJson(API_BASE + "/chat/send", payload);
+        var data = await postJson(API_BASE + "/chat/send", payload, 12000);
         if (!data || !data.success || !data.data) {
           throw new Error("bad response");
         }
@@ -3263,24 +3274,47 @@
         var duration = profile && profile.tryingDuration ? profile.tryingDuration : "";
         var hasCondition = profile && profile.hasCondition;
         var conditions = profile && profile.conditions && profile.conditions.length ? profile.conditions.join("、") : "";
+        var direct = "";
+        var explain = "";
+        var advice = "";
+        var nextStep = "你也可以继续补充档案、上传报告，或者让我帮你匹配医生和预约问诊。";
         if (/叶酸|备孕吃什么/.test(text)) {
-          return "备孕阶段一般建议优先保证叶酸补充，通常会结合年龄、备孕时长和既往情况一起看。如果你已经有基础档案，后续我可以帮你继续细化饮食和补充方案。";
+          direct = "备孕阶段一般建议优先保证叶酸补充。";
+          explain = "叶酸的核心是看剂量、开始时间和你是否有特殊情况，通常不建议只按“补得越多越好”来理解。";
+          advice = "结合你的年龄、备孕时长和既往情况来看，先把基础档案补完整，再细化饮食和补充方案会更稳妥。";
         }
         if (/月经.*不规律|月经不规律/.test(text)) {
-          return "月经不规律时，建议先结合年龄、备孕时长、是否有多囊卵巢、AMH 和基础卵泡情况一起判断。你可以把相关检查资料补充完整，我再帮你拆成更具体的下一步。";
+          direct = "月经不规律时，先别急着下结论，建议先系统梳理原因。";
+          explain = "常见会和排卵不稳定、周期波动、痛经、体重变化、压力或多囊卵巢等情况相关。";
+          advice = "结合你的年龄、备孕时长、AMH 和基础卵泡情况一起看，会比单看月经表现更准确。";
         }
         if (/AMH/.test(text)) {
-          return "AMH 更适合作为卵巢储备的参考指标之一，不能单独下结论。通常要结合年龄、基础卵泡数、月经情况和其他激素一起综合判断。";
+          direct = "AMH 更适合作为备孕参考，不建议单独下结论。";
+          explain = "它通常需要和年龄、基础卵泡数、月经情况以及其他激素指标一起综合判断。";
+          advice = "如果你已经有相关报告，后续可以继续上传，我帮你把指标之间的关系梳理出来。";
         }
         if (/促排|卵泡|试管/.test(text)) {
-          return "如果进入促排或试管前准备阶段，通常建议先把基础档案、既往检查和医生关注的问题整理完整，再根据结果决定下一步方案。";
+          direct = "如果进入促排或试管前准备阶段，先把基础信息和检查资料整理完整最重要。";
+          explain = "这类阶段通常不是只看一个指标，而是看卵巢功能、激素、超声和既往治疗情况一起判断。";
+          advice = "把基础档案、既往检查和医生关注的问题先准备好，后续更容易判断下一步。";
+        }
+        if (!direct) {
+          direct = "我可以先根据你现有信息，帮你做一个方向判断。";
+          explain = "这类问题通常需要结合备孕阶段、检查资料和既往情况一起看。";
+          advice = "如果你愿意继续补充月经、检查报告或既往治疗情况，我能把建议梳理得更细。";
         }
         var profileText = [];
         if (age) profileText.push("你当前年龄是" + age);
         if (duration) profileText.push("备孕时长为" + duration);
         if (hasCondition !== null && hasCondition !== undefined) profileText.push(hasCondition ? "有相关情况" : "暂未填写相关情况");
         if (conditions) profileText.push("已填写：" + conditions);
-        return "我先根据你现有信息做一个简要判断。" + (profileText.length ? "（" + profileText.join("，") + "）" : "") + " 你可以继续补充基础信息，我会再帮你往下分析。";
+        var profileLine = profileText.length ? "当前档案：" + profileText.join("，") + "。" : "当前档案还可以继续补充。";
+        return [
+          direct,
+          explain,
+          profileLine + advice,
+          nextStep
+        ].join("\n\n");
       }
 
       async function sendChatMessageNow(text, options) {
@@ -3329,11 +3363,9 @@
           confirmBtn.textContent = "提交中...";
         }
         var profile = getCurrentProfilePayload();
-        try {
-          await postJson(API_BASE + "/profile/" + userId, profile);
-        } catch (error) {
+        postJson(API_BASE + "/profile/" + userId, profile, 6000).catch(function () {
           // 档案保存失败不阻塞后续对话
-        }
+        });
         var summary = [
           profile.age ? profile.age + "岁" : "未选择年龄",
           profile.tryingDuration || "未选择备孕时长",
@@ -3346,8 +3378,6 @@
         currentProfileDraft = null;
         var gate = document.getElementById(profilePanelId);
         if (gate) gate.remove();
-        appendBubble("ai", '<strong>档案已提交</strong>我已记录你的基础信息，可以继续提问了。');
-        scrollChatToBottom();
         if (confirmBtn) {
           confirmBtn.disabled = false;
           confirmBtn.textContent = "提交档案并继续";
