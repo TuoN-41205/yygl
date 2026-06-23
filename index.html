@@ -1,0 +1,3459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>启孕企鹅 AI 版 V0.5-2 页面原型</title>
+  <style>
+    :root {
+      --primary: #49918f;
+      --primary-dark: #235d61;
+      --primary-light: #88bfb8;
+      --primary-surface: #eff7f5;
+      --accent: #e58475;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --line: rgba(73, 145, 143, 0.14);
+      --surface: rgba(255, 255, 255, 0.76);
+      --surface-strong: rgba(255, 255, 255, 0.9);
+      --shadow-sm: 0 14px 30px rgba(73, 145, 143, 0.08);
+      --shadow-md: 0 20px 48px rgba(73, 145, 143, 0.12);
+      --shadow-lg: 0 32px 80px rgba(35, 93, 97, 0.16);
+      --radius-xl: 32px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 16px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "PingFang SC", "PingFangSC-Regular", "Hiragino Sans GB", "Heiti SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      color: var(--text-primary);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(244, 198, 217, 0.4), transparent 24%),
+        radial-gradient(circle at 88% 10%, rgba(136, 191, 184, 0.34), transparent 26%),
+        linear-gradient(180deg, #f7fbfa 0%, #eef7f5 52%, #f7f8fa 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 18px;
+    }
+
+    .stage {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      position: relative;
+      width: 375px;
+      height: 812px;
+      overflow: hidden;
+      border-radius: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.94), transparent 18%),
+        radial-gradient(circle at 86% 10%, rgba(244, 198, 217, 0.36), transparent 24%),
+        linear-gradient(180deg, #f4fbfa 0%, #eef8f6 58%, #f6f8fb 100%);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 8% 30%, rgba(136, 191, 184, 0.14), transparent 24%),
+        radial-gradient(circle at 92% 18%, rgba(255, 255, 255, 0.52), transparent 18%);
+    }
+
+    .statusbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .statusbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-dark);
+    }
+
+    .signal {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .signal span {
+      width: 3px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    .signal span:nth-child(1) { height: 4px; opacity: 0.55; }
+    .signal span:nth-child(2) { height: 6px; opacity: 0.7; }
+    .signal span:nth-child(3) { height: 9px; opacity: 0.85; }
+    .signal span:nth-child(4) { height: 12px; }
+
+    .battery {
+      position: relative;
+      width: 24px;
+      height: 12px;
+      border-radius: 4px;
+      border: 1.4px solid currentColor;
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: -3px;
+      width: 2px;
+      height: 4px;
+      border-radius: 1px;
+      background: currentColor;
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 6px;
+      top: 2px;
+      bottom: 2px;
+      border-radius: 2px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    }
+
+    .screen {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 52px);
+      padding: 0 18px 18px;
+      overflow: hidden;
+    }
+
+    .main-scroll {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding-bottom: 12px;
+    }
+
+    .main-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-board {
+      position: relative;
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 0 16px;
+      min-height: 0;
+    }
+
+    .hero-stage {
+      position: relative;
+      min-height: 298px;
+      padding: 8px 10px 0;
+    }
+
+    .conversation-viewport {
+      min-height: 220px;
+      margin-top: 4px;
+      padding: 2px 2px 10px;
+    }
+
+    .conversation-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .chat-bubble {
+      width: fit-content;
+      max-width: 100%;
+      padding: 12px 14px;
+      border-radius: 22px 22px 22px 8px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      box-shadow: 0 14px 28px rgba(73, 145, 143, 0.08);
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .chat-bubble strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--primary-dark);
+      font-size: 14px;
+    }
+
+    .chat-bubble.ai {
+      width: 330px;
+      max-width: 330px;
+      box-sizing: border-box;
+      border-radius: 8px 22px 22px 22px;
+      background: rgba(248, 252, 251, 0.94);
+    }
+
+    .chat-bubble.user {
+      margin-left: auto;
+      border-radius: 22px 8px 22px 22px;
+      background: linear-gradient(135deg, rgba(136,191,184,0.16), rgba(255,255,255,0.92));
+      color: var(--primary-dark);
+    }
+
+    .intake-card {
+      padding: 14px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,252,251,0.92));
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      box-shadow: 0 18px 34px rgba(73, 145, 143, 0.08);
+    }
+
+    .intake-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .intake-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      box-shadow: 0 0 0 5px rgba(136,191,184,0.14);
+      flex: 0 0 auto;
+    }
+
+    .intake-head strong {
+      font-size: 14px;
+      color: var(--primary-dark);
+    }
+
+    .intake-sub {
+      margin: 0 0 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .intake-fields {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .field-value {
+      min-height: 38px;
+      padding: 9px 12px;
+      border-radius: 14px;
+      background: rgba(239,247,245,0.92);
+      border: 1px solid rgba(73,145,143,0.08);
+      color: var(--primary-dark);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .field-select {
+      width: 100%;
+      min-height: 38px;
+      padding: 9px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(73,145,143,0.08);
+      background: rgba(239,247,245,0.92);
+      color: var(--primary-dark);
+      font-size: 13px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--primary-dark) 50%),
+        linear-gradient(135deg, var(--primary-dark) 50%, transparent 50%);
+      background-position:
+        calc(100% - 16px) 16px,
+        calc(100% - 11px) 16px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 30px;
+    }
+
+    .toggle-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toggle-pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(73,145,143,0.12);
+      background: rgba(255,255,255,0.9);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-pill.active {
+      background: rgba(136,191,184,0.18);
+      color: var(--primary-dark);
+      border-color: rgba(73,145,143,0.18);
+    }
+
+    .condition-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .condition-chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(239,247,245,0.92);
+      border: 1px solid rgba(73,145,143,0.08);
+      color: var(--primary-dark);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .condition-chip.active {
+      background: rgba(73,145,143,0.12);
+      border-color: rgba(73,145,143,0.18);
+      font-weight: 600;
+    }
+
+    .intake-footer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .intake-confirm {
+      min-width: 104px;
+      height: 38px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 20px rgba(73,145,143,0.18);
+      cursor: pointer;
+    }
+
+    .intake-confirm:active {
+      transform: translateY(1px);
+    }
+
+    .reply-card {
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(73,145,143,0.08), rgba(255,255,255,0.9));
+      border: 1px solid rgba(73,145,143,0.08);
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .reply-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+      font-size: 14px;
+    }
+
+    .mascot-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    .mascot {
+      width: 182px;
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 14px 24px rgba(35, 93, 97, 0.14));
+      transform: translateY(2px);
+    }
+
+    .assistant-card {
+      position: relative;
+      margin: 0 auto;
+      width: min(100%, 318px);
+      padding: 12px 16px 14px;
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248, 252, 251, 0.9)),
+        radial-gradient(circle at 20% 0%, rgba(136, 191, 184, 0.12), transparent 28%);
+      border: 1px solid rgba(73, 145, 143, 0.1);
+      box-shadow: 0 18px 36px rgba(73, 145, 143, 0.09);
+    }
+
+    .assistant-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(circle at 80% 0%, rgba(229, 132, 117, 0.08), transparent 22%);
+    }
+
+    .assistant-card strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--primary-dark);
+    }
+
+    .assistant-card p {
+      margin: 0 0 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .prompt-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .prompt-tag {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(239, 247, 245, 0.92);
+      color: var(--primary-dark);
+      font-size: 12px;
+      line-height: 1;
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      white-space: nowrap;
+    }
+
+    .quick-action-strip {
+      display: flex;
+      flex-shrink: 0;
+      gap: 12px;
+      padding: 0 14px;
+      margin-top: 0;
+      margin-bottom: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      min-height: 32px;
+      flex-wrap: nowrap;
+    }
+
+    .quick-action-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quick-pill {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 110px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      background: rgba(255, 255, 255, 0.84);
+      color: #20284a;
+      box-shadow: 0 10px 24px rgba(73, 145, 143, 0.08);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .quick-pill svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .frosted {
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .icon-btn,
+    .tool-icon,
+    .nav-icon,
+    .entry-icon,
+    .close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+
+    .brand-name strong {
+      display: block;
+      font-size: 17px;
+      color: var(--primary-dark);
+    }
+
+    .brand-name {
+      margin-right: auto;
+    }
+
+    .brand-name span {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .top-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      color: var(--primary-dark);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .composer-wrap {
+      position: relative;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      margin-top: 10px;
+      padding: 8px 0 calc(env(safe-area-inset-bottom) + 10px);
+      min-height: 112px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 6px;
+      background: linear-gradient(180deg, rgba(248, 251, 250, 0.98), rgba(246, 249, 250, 0.98));
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: 0 -12px 28px rgba(73, 145, 143, 0.08);
+      overflow: hidden;
+    }
+
+    .entry-bar {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 12px;
+      width: 100%;
+      height: 46px;
+      border-radius: 24px;
+      color: var(--text-tertiary);
+      font-size: 13px;
+    }
+
+    .entry-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .entry-tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 0 0 auto;
+    }
+
+    .entry-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(73,145,143,0.08);
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 20px rgba(73,145,143,0.06);
+      white-space: nowrap;
+    }
+
+    .entry-tab svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+    }
+
+    .entry-placeholder {
+      min-width: 0;
+      flex: 1 1 auto;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .entry-input {
+      min-width: 0;
+      flex: 1 1 auto;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.8);
+      color: var(--primary-dark);
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 0 12px;
+      font-family: inherit;
+      border-radius: 999px;
+      box-sizing: border-box;
+      caret-color: var(--primary-dark);
+    }
+
+    .entry-input::placeholder {
+      color: rgba(109, 126, 135, 0.8);
+    }
+
+    .circle-cta {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      box-shadow: 0 12px 26px rgba(73, 145, 143, 0.22);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .circle-cta svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    button,
+    input,
+    textarea,
+    select,
+    .detail-top,
+    .detail-card,
+    .sheet-panel,
+    .archive-page,
+    .history-card,
+    .quick-actions,
+    .entry-bar {
+      font-family: inherit;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .overlay.active {
+      pointer-events: auto;
+    }
+
+    .dimmed {
+      position: absolute;
+      inset: 0;
+      background: rgba(24, 49, 50, 0.18);
+      opacity: 0;
+      transition: opacity 220ms ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .overlay.active .dimmed {
+      opacity: 1;
+    }
+
+    .detail-panel,
+    .sheet-panel {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow-md);
+      transition: transform 240ms ease, opacity 240ms ease;
+      opacity: 0;
+    }
+
+    .archive-page {
+      position: absolute;
+      inset: 0;
+      padding: 14px 14px 18px;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(136, 191, 184, 0.24), transparent 24%),
+        radial-gradient(circle at 84% 18%, rgba(229, 132, 117, 0.14), transparent 20%),
+        linear-gradient(180deg, #eff7f5 0%, #f7f8fa 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow-md);
+      transform: translateY(100%);
+      transition: transform 240ms ease, opacity 240ms ease;
+      opacity: 0;
+      overflow-y: auto;
+    }
+
+    .expert-page {
+      position: absolute;
+      inset: 0;
+      padding: 12px 14px 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(247,248,250,0.98) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow-md);
+      transform: translateY(100%);
+      transition: transform 240ms ease, opacity 240ms ease;
+      opacity: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .expert-statusbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.98);
+    }
+
+    .expert-statusbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-dark);
+    }
+
+    .expert-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    .expert-back-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      flex: 0 0 auto;
+    }
+
+    .expert-topbar-copy {
+      margin-right: auto;
+      padding-left: 4px;
+    }
+
+    .expert-topbar-copy h3 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--primary-dark);
+    }
+
+    .expert-topbar-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      flex: 0 0 auto;
+    }
+    .overlay.active .archive-page {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .overlay.active .expert-page {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .archive-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .archive-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid rgba(73, 145, 143, 0.08);
+    }
+
+    .archive-title {
+      margin-right: auto;
+      padding-left: 6px;
+    }
+
+    .archive-title h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      color: var(--primary-dark);
+    }
+
+    .archive-title p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .archive-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 4px;
+    }
+
+    .archive-card {
+      position: relative;
+      padding: 14px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      box-shadow: 0 14px 32px rgba(41, 95, 98, 0.08);
+    }
+
+    .archive-hero {
+      background:
+        linear-gradient(135deg, rgba(136, 191, 184, 0.2) 0%, rgba(255, 255, 255, 0.9) 52%, rgba(244, 198, 217, 0.15) 100%);
+    }
+
+    .archive-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .archive-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 50% 30%, #f5d2bf 0 22%, transparent 23%),
+        radial-gradient(circle at 50% 40%, #f4f1ed 0 10%, transparent 11%),
+        linear-gradient(180deg, #b9ded7 0%, #4f8f91 100%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+      flex: 0 0 auto;
+    }
+
+    .archive-hero-copy {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .archive-hero-copy strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.25;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .archive-hero-copy p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    .archive-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .archive-badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(239, 247, 245, 0.95);
+      color: var(--primary-dark);
+      font-size: 12px;
+      line-height: 1;
+      border: 1px solid rgba(73, 145, 143, 0.08);
+    }
+
+    .archive-badge.accent {
+      background: rgba(244, 198, 217, 0.35);
+      color: var(--accent);
+    }
+
+    .archive-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .archive-stat {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(239, 247, 245, 0.8);
+      text-align: center;
+    }
+
+    .archive-stat strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .archive-stat span {
+      display: block;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+    }
+
+    .archive-section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .archive-section-title strong {
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+
+    .archive-section-title span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .archive-summary-list,
+    .archive-rail {
+      display: grid;
+      gap: 10px;
+    }
+
+    .archive-summary-item,
+    .archive-rail-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(73, 145, 143, 0.06);
+    }
+
+    .archive-summary-item .entry-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(239, 247, 245, 0.95);
+      color: var(--primary-dark);
+      flex: 0 0 auto;
+    }
+
+    .archive-summary-item strong,
+    .archive-rail-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .archive-summary-item span,
+    .archive-rail-item span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .archive-rail-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 6px rgba(73, 145, 143, 0.12);
+      flex: 0 0 auto;
+      margin-top: 4px;
+    }
+
+    .archive-footer {
+      display: flex;
+      gap: 10px;
+      position: sticky;
+      bottom: 0;
+      padding-top: 2px;
+      background: linear-gradient(180deg, rgba(247,248,250,0) 0%, rgba(247,248,250,0.86) 40%, rgba(247,248,250,0.98) 100%);
+    }
+
+    .archive-footer .cta-btn,
+    .archive-footer .ghost-btn {
+      flex: 1 1 0;
+      height: 46px;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .archive-footer .ghost-btn {
+      border: 1px solid rgba(73, 145, 143, 0.16);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--primary-dark);
+    }
+
+    .expert-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 2px 0 12px;
+    }
+
+    .expert-list-container {
+      display: grid;
+      gap: 12px;
+    }
+
+    .expert-empty-state {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.78);
+      color: var(--text-secondary);
+      font-size: 13px;
+      border: 1px dashed rgba(73, 145, 143, 0.18);
+    }
+
+    .expert-card {
+      position: relative;
+      padding: 18px 16px 18px;
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,250,0.96));
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      box-shadow: 0 18px 44px rgba(73, 145, 143, 0.08);
+      overflow: hidden;
+    }
+
+    .expert-card-featured {
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 250, 249, 0.96)),
+        radial-gradient(circle at 100% 0%, rgba(136, 191, 184, 0.12), transparent 30%);
+    }
+
+    .expert-card-featured .expert-card-top {
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .expert-card-featured .expert-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 24px;
+    }
+
+    .expert-card-featured .expert-name {
+      font-size: 19px;
+    }
+
+    .expert-card-featured .expert-specialty {
+      margin: 12px 0;
+      background: linear-gradient(135deg, rgba(239, 247, 245, 0.98), rgba(255, 255, 255, 0.98));
+    }
+
+    .expert-card-featured .expert-intro {
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .expert-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(73,145,143,0.26), rgba(136,191,184,0.12), transparent);
+    }
+
+    .expert-card-top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .expert-head-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .expert-avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+      background: linear-gradient(180deg, #f7faf8, #edf5f2);
+      box-shadow: inset 0 0 0 1px rgba(73,145,143,0.08);
+    }
+
+    .expert-info {
+      flex: 1;
+      min-width: 0;
+      padding-top: 1px;
+    }
+
+    .expert-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .expert-name {
+      font-size: 21px;
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--primary-dark);
+      letter-spacing: 0.2px;
+    }
+
+    .expert-role {
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: #edf7f5;
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .expert-meta {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #7b8f90;
+    }
+
+    .expert-headline {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #4f7476;
+      font-weight: 600;
+    }
+
+    .expert-headline strong {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .expert-specialty {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #4f7476;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .expert-specialty strong {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .expert-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .expert-intro {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(73, 145, 143, 0.08);
+      display: grid;
+      gap: 8px;
+    }
+
+    .expert-intro p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.82;
+      color: #6f8485;
+    }
+
+    .expert-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .tag-pill-soft {
+      background: rgba(255, 244, 194, 0.95);
+      color: #9a5b00;
+    }
+
+    .tag-pill-muted {
+      background: rgba(232, 244, 244, 0.95);
+      color: var(--primary-dark);
+    }
+
+    .detail-panel {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 90%;
+      border-radius: 0 30px 30px 0;
+      transform: translateX(-100%);
+      padding: 12px 14px 16px;
+      overflow-y: auto;
+    }
+
+    .overlay.active .detail-panel {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .detail-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .archive-back {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: rgba(73, 145, 143, 0.08);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .archive-title {
+      margin-right: auto;
+      padding-left: 6px;
+    }
+
+    .detail-top h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--primary-dark);
+    }
+
+    .detail-top p {
+      margin: 4px 0 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: rgba(73, 145, 143, 0.08);
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+
+    .detail-card {
+      position: relative;
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      margin-bottom: 10px;
+    }
+
+    .profile-setting-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: rgba(239, 247, 245, 0.9);
+      color: var(--primary-dark);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-summary {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .detail-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .metric-item {
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(239, 247, 245, 0.76);
+      text-align: center;
+    }
+
+    .metric-item strong {
+      display: block;
+      font-size: 18px;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .metric-item span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .detail-inline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.68);
+      cursor: pointer;
+    }
+
+    .detail-inline-title {
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .entry-bar .placeholder {
+      flex: 1;
+      padding-right: 12px;
+      color: #a6a6aa;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .history-card {
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .history-card h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--primary-dark);
+    }
+
+    .history-thread {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .history-topic {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .history-line {
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-divider {
+      height: 1px;
+      background: rgba(73, 145, 143, 0.12);
+      margin: 0 12px;
+    }
+
+    .sheet-panel {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 28px 28px 0 0;
+      transform: translateY(100%);
+      padding: 16px;
+      max-height: 84%;
+      overflow-y: auto;
+    }
+
+    #report-overlay .sheet-panel {
+      inset: 0;
+      border-radius: 0;
+      max-height: none;
+      overflow: hidden;
+      padding: 0;
+      background: #ffffff;
+    }
+
+    .camera-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      color: #111111;
+      background: #ffffff;
+    }
+
+    .camera-statusbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: #ffffff;
+    }
+
+    .camera-statusbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-dark);
+    }
+
+    .camera-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 18px 12px;
+      background: #ffffff;
+    }
+
+    .camera-back-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      flex: 0 0 auto;
+    }
+
+    .camera-topbar-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-right: auto;
+      color: var(--primary-dark);
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .camera-topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--primary-dark);
+    }
+
+    .camera-top {
+      display: none;
+    }
+
+    .camera-time {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .camera-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .camera-preview {
+      position: relative;
+      flex: 1 1 auto;
+      background:
+        linear-gradient(180deg, rgba(39, 34, 31, 0.08), rgba(39, 34, 31, 0.18)),
+        linear-gradient(180deg, #8c8c8c 0%, #5f5d59 35%, #3d3936 100%);
+      overflow: hidden;
+    }
+
+    .camera-preview::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 0 22%, rgba(255,255,255,0.04) 22% 23%, transparent 23% 100%),
+        linear-gradient(90deg, transparent 0 6%, rgba(255,255,255,0.04) 6% 7%, transparent 7% 100%);
+    }
+
+    .camera-preview::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.00), rgba(0,0,0,0.10) 55%, rgba(0,0,0,0.16)),
+        radial-gradient(circle at 50% 44%, rgba(255,255,255,0.04), transparent 34%);
+      pointer-events: none;
+    }
+
+    .focus-frame {
+      position: absolute;
+      left: 50%;
+      top: 42px;
+      width: min(84vw, 320px);
+      height: min(44vh, 360px);
+      transform: translateX(-50%);
+      border: 4px solid rgba(255,255,255,0.9);
+      border-radius: 28px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.22);
+    }
+
+    .camera-center-note {
+      position: absolute;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      white-space: nowrap;
+    }
+
+    .rotate-btn {
+      position: absolute;
+      right: 22px;
+      top: 52%;
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: rgba(52, 46, 50, 0.7);
+      color: #ffffff;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+      transform: translateY(-50%);
+    }
+
+    .camera-bottom {
+      background: rgba(255,255,255,0.98);
+      border-radius: 30px 30px 0 0;
+      padding: 10px 18px 18px;
+      box-shadow: 0 -18px 40px rgba(35, 31, 29, 0.08);
+    }
+
+    .camera-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: center;
+      text-align: center;
+      font-size: 16px;
+      color: #9a9aa3;
+      margin-bottom: 16px;
+    }
+
+    .camera-tab.active {
+      position: relative;
+      color: #111111;
+      font-weight: 700;
+    }
+
+    .camera-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      width: 52px;
+      height: 7px;
+      border-radius: 999px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, rgba(118, 97, 228, 0.18), rgba(118, 97, 228, 0.42));
+    }
+
+    .camera-actions {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 4px 8px 0;
+    }
+
+    .report-result {
+      margin: 10px 18px 18px;
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(248, 250, 252, 0.98);
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      color: var(--primary-dark);
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 56px;
+    }
+
+    .camera-action {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-dark);
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .camera-action label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .camera-action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #e7f2ef;
+      color: var(--primary);
+    }
+
+    .shutter-wrap {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle, rgba(143, 128, 245, 0.28) 0 44%, rgba(255,255,255,0) 45%);
+      justify-self: center;
+    }
+
+    .shutter {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+      box-shadow: 0 16px 30px rgba(73, 145, 143, 0.34), inset 0 0 0 6px rgba(255,255,255,0.84);
+      border: none;
+      cursor: pointer;
+    }
+
+    .overlay.active .sheet-panel {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sheet-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .sheet-head h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: var(--primary-dark);
+    }
+
+    .sheet-head p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .sheet-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-tab {
+      padding: 10px 8px;
+      border-radius: 16px;
+      background: rgba(239, 247, 245, 0.8);
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .sheet-tab.active {
+      color: var(--primary-dark);
+      font-weight: 600;
+      background: rgba(136, 191, 184, 0.18);
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .guide-card {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      min-height: 218px;
+    }
+
+    .guide-card strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .guide-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .guide-image {
+      height: 128px;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.98), rgba(246,250,249,0.92)),
+        radial-gradient(circle at 30% 30%, rgba(136,191,184,0.28), transparent 36%);
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .guide-image.report::before {
+      content: "";
+      position: absolute;
+      inset: 12px 18px;
+      border-radius: 10px;
+      border: 2px solid rgba(73, 145, 143, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(73, 145, 143, 0.08);
+    }
+
+    .guide-image.phone::before {
+      content: "";
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      top: 14px;
+      bottom: 14px;
+      border-radius: 18px;
+      border: 3px solid rgba(73, 145, 143, 0.24);
+    }
+
+    .risk-note {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .error-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .error-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 8px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .error-item em {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: block;
+      background: rgba(239, 247, 245, 0.9);
+    }
+
+    .cta-btn {
+      width: 100%;
+      height: 46px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(73, 145, 143, 0.22);
+    }
+
+    .hidden-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .profile-setting-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: rgba(239, 247, 245, 0.9);
+      color: var(--primary-dark);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .detail-inline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.68);
+      cursor: pointer;
+    }
+
+    .detail-inline-title {
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .detail-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .archive-back {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: rgba(73, 145, 143, 0.08);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .archive-title {
+      margin-right: auto;
+      padding-left: 6px;
+    }
+
+    .detail-top h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--primary-dark);
+    }
+
+    .detail-top p {
+      margin: 4px 0 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .detail-panel {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 90%;
+      border-radius: 0 30px 30px 0;
+      transform: translateX(-100%);
+      padding: 12px 14px 16px;
+      overflow-y: auto;
+    }
+
+    .overlay.active .detail-panel {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .detail-card {
+      position: relative;
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      margin-bottom: 10px;
+    }
+
+    .detail-summary {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .detail-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(136, 191, 184, 0.9), rgba(73, 145, 143, 0.96));
+    }
+
+    .detail-avatar::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 12px;
+      height: 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .detail-avatar::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      height: 20px;
+      border-radius: 12px 12px 18px 18px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .metric-item {
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(239, 247, 245, 0.76);
+      text-align: center;
+    }
+
+    .metric-item strong {
+      display: block;
+      font-size: 18px;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .metric-item span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .history-card {
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .history-card h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--primary-dark);
+    }
+
+    .history-thread {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .history-topic {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .history-line {
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-divider {
+      height: 1px;
+      background: rgba(73, 145, 143, 0.12);
+      margin: 0 12px;
+    }
+
+    .sheet-panel {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 28px 28px 0 0;
+      transform: translateY(100%);
+      padding: 16px;
+      max-height: 84%;
+      overflow-y: auto;
+    }
+
+    .overlay.active .sheet-panel {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sheet-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .sheet-head h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: var(--primary-dark);
+    }
+
+    .sheet-head p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .sheet-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-tab {
+      padding: 10px 8px;
+      border-radius: 16px;
+      background: rgba(239, 247, 245, 0.8);
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .sheet-tab.active {
+      color: var(--primary-dark);
+      font-weight: 600;
+      background: rgba(136, 191, 184, 0.18);
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .guide-card {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      min-height: 218px;
+    }
+
+    .guide-card strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .guide-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .guide-image {
+      height: 128px;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.98), rgba(246,250,249,0.92)),
+        radial-gradient(circle at 30% 30%, rgba(136,191,184,0.28), transparent 36%);
+      border: 1px solid rgba(73, 145, 143, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .guide-image.report::before {
+      content: "";
+      position: absolute;
+      inset: 12px 18px;
+      border-radius: 10px;
+      border: 2px solid rgba(73, 145, 143, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(73, 145, 143, 0.08);
+    }
+
+    .guide-image.phone::before {
+      content: "";
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      top: 14px;
+      bottom: 14px;
+      border-radius: 18px;
+      border: 3px solid rgba(73, 145, 143, 0.24);
+    }
+
+    .risk-note {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .error-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .error-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 8px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .error-item em {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: block;
+      background: rgba(239, 247, 245, 0.9);
+    }
+
+    .cta-btn {
+      width: 100%;
+      height: 46px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(73, 145, 143, 0.22);
+    }
+  </style>
+</head>
+  <body>
+  <div class="stage">
+    <div class="phone">
+      <div class="statusbar">
+        <span>17:09</span>
+        <div class="statusbar-right">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <span>5G</span>
+          <div class="battery"></div>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="topbar">
+          <div class="icon-btn frosted" data-open="profile">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M2.5 4.5H15.5M2.5 9H15.5M2.5 13.5H10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-name">
+            <strong>启孕企鹅</strong>
+            <span>试管备孕 AI 院外陪伴</span>
+          </div>
+        </div>
+
+        <div class="main-scroll">
+          <div class="hero-board">
+            <div class="hero-stage">
+              <div class="mascot-wrap">
+                <img class="mascot" src="./1企鹅.png" alt="启孕企鹅IP形象" />
+              </div>
+              <div class="assistant-card">
+                <strong>这里是AI助手小企鹅，请问您有什么诉求呢？</strong>
+                <p>可以直接告诉我你想查的问题，我帮你看看常见的备孕相关信息。</p>
+                <div class="prompt-tags">
+                  <div class="prompt-tag">AMH 偏低怎么办</div>
+                  <div class="prompt-tag">备孕吃什么叶酸</div>
+                  <div class="prompt-tag">促排前要查什么</div>
+                  <div class="prompt-tag">月经不规律能怀吗</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="conversation-viewport" aria-label="对话展示区" data-chat-viewport>
+            <div class="conversation-stack" data-chat-stream></div>
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="quick-action-strip" aria-label="快捷功能">
+            <div class="entry-tab" data-open="report">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M4 3.7H11.7L14 6V14.3C14 15.16 13.3 15.86 12.44 15.86H4.96C4.1 15.86 3.4 15.16 3.4 14.3V5.26C3.4 4.4 4.1 3.7 4.96 3.7H4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M10.8 3.7V6.2H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5.6 8.4H11.8M5.6 11.1H10.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              报告分析
+            </div>
+            <div class="entry-tab" data-open="expert">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M3.5 7.2C3.5 4.5 5.8 2.2 8.5 2.2C11.2 2.2 13.5 4.5 13.5 7.2C13.5 10 11.2 12.2 8.5 12.2C5.8 12.2 3.5 10 3.5 7.2Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M11.4 11.5L14.5 14.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M6.3 7.2H10.7M8.5 5V9.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              专家团队
+            </div>
+          </div>
+          <div class="entry-bar frosted">
+            <input class="entry-input" type="text" placeholder="发消息或按住说话…" aria-label="消息输入框" data-message-input />
+            <div class="circle-cta">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-icon lucide-send" aria-hidden="true">
+                <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/>
+                <path d="m21.854 2.147-10.94 10.939"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="overlay" id="profile-overlay">
+        <div class="dimmed" data-close="profile"></div>
+        <div class="detail-panel">
+          <div class="detail-top">
+            <div>
+              <h3>个人中心</h3>
+            </div>
+            <div class="close-btn" data-close="profile">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="profile-setting-btn" aria-label="授权与隐私">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 3.1L9.1 3.4L9.8 2.5L11.2 3.7L10.9 4.8L11.9 5.5L13 5.1L13.5 6.9L12.6 7.5V8.5L13.5 9.1L13 10.9L11.9 10.5L10.9 11.2L11.2 12.3L9.8 13.5L9.1 12.6L8 12.9L6.9 12.6L6.2 13.5L4.8 12.3L5.1 11.2L4.1 10.5L3 10.9L2.5 9.1L3.4 8.5V7.5L2.5 6.9L3 5.1L4.1 5.5L5.1 4.8L4.8 3.7L6.2 2.5L6.9 3.4L8 3.1Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                <circle cx="8" cy="8" r="1.8" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <div class="detail-summary">
+              <div class="detail-avatar"></div>
+              <div class="detail-head">
+                <strong>驼鸟 · 31 岁</strong>
+              </div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-item">
+                <strong>72%</strong>
+                <span>档案完整度</span>
+              </div>
+              <div class="metric-item">
+                <strong>3 份</strong>
+                <span>报告归档</span>
+              </div>
+              <div class="metric-item">
+                <strong>2 项</strong>
+                <span>待补信息</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-list">
+              <div class="detail-inline-row" data-open="archive" data-close="profile">
+                <div class="entry-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <rect x="3.5" y="3" width="9" height="9.8" rx="2" stroke="var(--primary-dark)" stroke-width="1.5"/>
+                    <path d="M6 6H10M6 8.5H10" stroke="var(--primary-dark)" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <strong class="detail-inline-title">用户档案</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="history-card">
+            <h4>历史问答</h4>
+            <div class="history-thread">
+              <div class="history-topic">
+                <div class="history-line">AMH 0.8 代表什么？ 已帮你解释为卵巢储备参考值偏低，建议结合年龄、基础卵泡数和性激素一起看…</div>
+                <div class="history-divider"></div>
+                <div class="history-line">第一次去生殖中心前要准备什么？ 已整理为两类：已有检查资料和想问医生的问题清单，便于复诊时直接使用…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="expert-overlay">
+        <div class="dimmed" data-close="expert"></div>
+        <div class="expert-page">
+          <div class="expert-statusbar">
+            <span>16:54</span>
+            <div class="expert-statusbar-right">
+              <div class="signal"><span></span><span></span><span></span><span></span></div>
+              <span>5G</span>
+              <div class="battery"></div>
+            </div>
+          </div>
+
+          <div class="expert-topbar">
+            <div class="expert-back-btn" data-close="expert" aria-label="返回">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <path d="M16.5 6.5L9.5 13L16.5 19.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="expert-topbar-copy">
+              <h3>专家团队</h3>
+            </div>
+            <div class="expert-topbar-close" data-close="expert" aria-label="关闭">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="expert-shell">
+            <div class="expert-list-container" data-expert-list></div>
+            <div class="expert-empty-state" data-expert-empty>正在加载专家列表…</div>
+            <div class="expert-card expert-card-featured" data-static-expert>
+              <div class="expert-card-top">
+                <div class="expert-head-row">
+                  <img class="expert-avatar" src="./doctor-1.png" alt="杨会生" />
+                  <div class="expert-info">
+                    <div class="expert-name-row">
+                      <div class="expert-name">杨会生</div>
+                      <div class="expert-role">主治医师</div>
+                    </div>
+                    <div class="expert-meta">中医针灸科 · 从业xx年</div>
+                    <div class="expert-headline"><strong>头衔：</strong>医学博士 · 针灸生殖专家 · 调经促孕十三针传承人</div>
+                  </div>
+                </div>
+                <p class="expert-specialty"><strong>特长：</strong>调经促孕十三针、房氏火龙灸、调泌疏肝穴位埋线</p>
+              </div>
+              <div class="expert-intro">
+                <p>医学博士，聚焦针灸生殖方向，长期深耕备孕调理与卵巢功能支持。</p>
+                <p>师从国家中医药领军人才岐黄学者房繄恭首席研究员，临床经验扎实。</p>
+                <p>擅长围绕生殖障碍、卵巢功能障碍和盆底功能障碍进行个性化调理。</p>
+              </div>
+            </div>
+
+            <div class="expert-card expert-card-featured" data-static-expert>
+              <div class="expert-card-top">
+                <div class="expert-head-row">
+                  <img class="expert-avatar" src="./doctor-3.png" alt="刘淑平" />
+                  <div class="expert-info">
+                    <div class="expert-name-row">
+                      <div class="expert-name">刘淑平</div>
+                      <div class="expert-role">主治医师</div>
+                    </div>
+                    <div class="expert-meta">深圳市南山妇幼保健院妇科 · 国家二级心理咨询师</div>
+                    <div class="expert-headline"><strong>头衔：</strong>生殖与妇科方向医生</div>
+                  </div>
+                </div>
+                <p class="expert-specialty"><strong>特长：</strong>复发性流产、不孕不育、输卵管不通、反复种植失败</p>
+              </div>
+              <div class="expert-intro">
+                <p>长期关注复发性流产、不孕不育和反复种植失败等问题。</p>
+                <p>擅长从妇科与心理双维度综合评估，帮助用户梳理就诊方向。</p>
+                <p>曾就职深圳市南山妇幼保健院妇科，临床经验较为丰富。</p>
+              </div>
+            </div>
+
+            <div class="expert-card expert-card-featured" data-static-expert>
+              <div class="expert-card-top">
+                <div class="expert-head-row">
+                  <img class="expert-avatar" src="./doctor-2.png" alt="任洪檀" />
+                  <div class="expert-info">
+                    <div class="expert-name-row">
+                      <div class="expert-name">任洪樟</div>
+                      <div class="expert-role">主任中医师</div>
+                    </div>
+                    <div class="expert-meta">省级名中医 · 教授 · 从业50余年</div>
+                    <div class="expert-headline"><strong>头衔：</strong>广东省名老中医专家学术经验传承工作指导老师</div>
+                  </div>
+                </div>
+                <p class="expert-specialty"><strong>特长：</strong>脑血管、神经、内分泌代谢、泌尿</p>
+              </div>
+              <div class="expert-intro">
+                <p>2002年评为黑龙江省名中医，长期从事中医临床与经验传承工作。</p>
+                <p>临床经验丰富，善于研究总结并形成自己的学术思路与用药风格。</p>
+                <p>擅长多系统内科常见及疑难杂症、妇科及男性不育调治。</p>
+              </div>
+            </div>
+
+            <div class="expert-card expert-card-featured" data-static-expert>
+              <div class="expert-card-top">
+                <div class="expert-head-row">
+                  <img class="expert-avatar" src="./doctor-4.png" alt="王俊玲" />
+                  <div class="expert-info">
+                    <div class="expert-name-row">
+                      <div class="expert-name">王俊玲</div>
+                      <div class="expert-role">主任中医师</div>
+                    </div>
+                    <div class="expert-meta">妇科医教研30余年 · 广东省名中医</div>
+                    <div class="expert-headline"><strong>头衔：</strong>硕士研究生导师 · 广东省首批名中医学术继承指导老师</div>
+                  </div>
+                </div>
+                <p class="expert-specialty"><strong>特长：</strong>多囊卵巢综合征、子宫内膜异位症、异常子宫出血</p>
+              </div>
+              <div class="expert-intro">
+                <p>从事中医妇产科临床、教学、科研工作30余年。</p>
+                <p>师从当代妇科八大家之一罗元恺教授以及国医大师刘敏如教授。</p>
+                <p>重点关注多囊卵巢、子宫内膜异位症、异常子宫出血和妇科疑难病。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="expert-shell" style="margin-top: 16px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="doctor-detail-overlay">
+        <div class="dimmed" data-close="doctor-detail"></div>
+        <div class="detail-panel">
+          <div class="detail-top">
+            <div class="profile-back" data-close="doctor-detail" aria-label="返回">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M9.8 4L5.8 8L9.8 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="profile-title">
+              <h3 data-doctor-name>医生详情</h3>
+            </div>
+            <div class="close-btn" data-close="doctor-detail" aria-label="关闭">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-summary">
+              <div class="detail-avatar" data-doctor-avatar></div>
+              <div class="detail-head">
+                <strong data-doctor-headline>医生详情</strong>
+                <span data-doctor-meta>请点击专家卡片查看医生介绍、社会任职与特长。</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-list">
+              <div class="detail-item">
+                <div class="entry-icon">医</div>
+                <div>
+                  <strong>医生介绍</strong>
+                  <span data-doctor-intro>暂无</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="entry-icon">任</div>
+                <div>
+                  <strong>社会任职</strong>
+                  <span data-doctor-social>暂无</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="entry-icon">特</div>
+                <div>
+                  <strong>特长</strong>
+                  <span data-doctor-specialty>暂无</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="archive-overlay">
+        <div class="dimmed" data-close="archive"></div>
+        <div class="archive-page">
+          <div class="archive-topbar">
+            <div class="archive-back" data-close="archive" data-open="profile">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M9.8 4L5.8 8L9.8 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="archive-title">
+              <h3>用户档案</h3>
+            </div>
+          </div>
+
+          <div class="archive-shell">
+            <div class="archive-card archive-hero">
+              <div class="archive-hero-top">
+                <div class="archive-avatar"></div>
+                <div class="archive-hero-copy">
+                  <strong>驼鸟 · 31 岁</strong>
+                  <p>已上传 AMH、性激素、阴超各 1 份。档案仍有补充空间，但核心判断信息已基本成型。</p>
+                </div>
+              </div>
+              <div class="archive-badges">
+                <div class="archive-badge">备孕 18 个月</div>
+                <div class="archive-badge">初诊待预约</div>
+                <div class="archive-badge accent">有备孕相关情况</div>
+              </div>
+            </div>
+
+            <div class="archive-card">
+              <div class="archive-section-title">
+                <strong>档案概览</strong>
+                <span>当前状态</span>
+              </div>
+              <div class="archive-stats">
+                <div class="archive-stat">
+                  <strong>72%</strong>
+                  <span>档案完整度</span>
+                </div>
+                <div class="archive-stat">
+                  <strong>3 份</strong>
+                  <span>报告归档</span>
+                </div>
+                <div class="archive-stat">
+                  <strong>2 项</strong>
+                  <span>待补信息</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="archive-card">
+              <div class="archive-section-title">
+                <strong>基础信息</strong>
+                <span>用于初诊判断</span>
+              </div>
+              <div class="archive-summary-list">
+                <div class="archive-summary-item">
+                  <div class="entry-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M7.9 3.6C9.3 3.6 10.4 4.7 10.4 6.1C10.4 7.5 9.3 8.6 7.9 8.6C6.5 8.6 5.4 7.5 5.4 6.1C5.4 4.7 6.5 3.6 7.9 3.6Z" stroke="var(--primary-dark)" stroke-width="1.5"/>
+                      <path d="M4 12.7C4.7 11.3 6.1 10.5 7.9 10.5C9.7 10.5 11.1 11.3 11.8 12.7" stroke="var(--primary-dark)" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>年龄与备孕时长</strong>
+                    <span>31 岁，备孕 18 个月，计划近期初诊。</span>
+                  </div>
+                </div>
+                <div class="archive-summary-item">
+                  <div class="entry-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M4.3 4H11.7C12.4 4 13 4.6 13 5.3V10.7C13 11.4 12.4 12 11.7 12H4.3C3.6 12 3 11.4 3 10.7V5.3C3 4.6 3.6 4 4.3 4Z" stroke="var(--primary-dark)" stroke-width="1.5"/>
+                      <path d="M5.6 2.8V4.6M10.4 2.8V4.6M5.7 7.4H10.3M5.7 9.7H8.8" stroke="var(--primary-dark)" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>月经情况</strong>
+                    <span>周期、经期长度、是否规律，当前待补。</span>
+                  </div>
+                </div>
+                <div class="archive-summary-item">
+                  <div class="entry-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <rect x="3.5" y="3" width="9" height="9.8" rx="2" stroke="var(--primary-dark)" stroke-width="1.5"/>
+                      <path d="M5.8 5.8H10.2M5.8 8H10.2M5.8 10.2H8.6" stroke="var(--primary-dark)" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>既往检查与报告</strong>
+                    <span>AMH、性激素、阴超、甲功等已有资料归档。</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="archive-card">
+              <div class="archive-section-title">
+                <strong>补充建议</strong>
+                <span>优先级排序</span>
+              </div>
+              <div class="archive-rail">
+                <div class="archive-rail-item">
+                  <div class="archive-rail-dot"></div>
+                  <div>
+                    <strong>补充月经周期与经期天数</strong>
+                    <span>帮助判断基础内分泌和周期规律性。</span>
+                  </div>
+                </div>
+                <div class="archive-rail-item">
+                  <div class="archive-rail-dot" style="background: var(--accent); box-shadow: 0 0 0 6px rgba(229, 132, 117, 0.12);"></div>
+                  <div>
+                    <strong>补充既往怀孕史 / 促排史</strong>
+                    <span>如有生化、胎停、移植失败或促排经历，请优先记录。</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="archive-footer">
+              <button class="ghost-btn" type="button" data-close="archive">稍后补充</button>
+              <button class="cta-btn" type="button" data-close="archive" data-open="report">开始补充</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay" id="report-overlay">
+        <div class="dimmed" data-close="report"></div>
+        <div class="sheet-panel camera-shell">
+          <div class="camera-statusbar">
+            <span>16:54</span>
+            <div class="camera-statusbar-right">
+              <div class="signal"><span></span><span></span><span></span><span></span></div>
+              <span>5G</span>
+              <div class="battery"></div>
+            </div>
+          </div>
+          <div class="camera-topbar">
+            <div class="camera-back-btn" data-close="report" aria-label="返回">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <path d="M16.5 6.5L9.5 13L16.5 19.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="camera-topbar-title">
+              <span>AI 智能相机</span>
+            </div>
+          </div>
+
+          <div class="camera-preview">
+            <div class="focus-frame"></div>
+            <div class="rotate-btn" aria-hidden="true">
+              <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <path d="M10.5 8.5C12.1 7.2 14.1 6.5 16.2 6.5C20.5 6.5 24 10 24 14.3C24 15.4 23.8 16.4 23.4 17.3" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M20 17H24V13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M19.5 21.5C17.9 22.8 15.9 23.5 13.8 23.5C9.5 23.5 6 20 6 15.7C6 14.6 6.2 13.6 6.6 12.7" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M10 13H6V17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="camera-center-note">请保证拍摄的照片清晰完整</div>
+          </div>
+
+          <div class="camera-bottom">
+            <div class="camera-actions">
+              <div class="camera-action">
+                <label for="album-input" aria-label="相册">
+                  <div class="camera-action-icon">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                      <path d="M4.5 14.2L8.2 10.5L11.6 13.9L14.5 11L17.5 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="7.2" cy="7.2" r="1.8" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <span>相册</span>
+                </label>
+              </div>
+              <div class="shutter-wrap">
+                <button class="shutter" type="button" aria-label="拍照"></button>
+              </div>
+              <div class="camera-action">
+                <label for="file-input" aria-label="文件">
+                  <div class="camera-action-icon">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                      <path d="M11 4.5V17.5M11 4.5L7.5 8M11 4.5L14.5 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span>文件</span>
+                </label>
+              </div>
+            </div>
+            <input id="album-input" class="hidden-input" type="file" accept="image/*" />
+            <input id="file-input" class="hidden-input" type="file" />
+          </div>
+          <div class="report-result" data-report-result></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var API_BASE = "http://127.0.0.1:8081/api/v1";
+      var overlayMap = {
+        profile: document.getElementById("profile-overlay"),
+        expert: document.getElementById("expert-overlay"),
+        doctorDetail: document.getElementById("doctor-detail-overlay"),
+        archive: document.getElementById("archive-overlay"),
+        report: document.getElementById("report-overlay")
+      };
+
+      var chatViewport = document.querySelector(".conversation-viewport");
+      var chatStream = document.querySelector("[data-chat-stream]");
+      var promptTags = document.querySelectorAll(".prompt-tag");
+      var messageInput = document.querySelector("[data-message-input]");
+      var sendButton = document.querySelector(".circle-cta");
+      var reportResult = document.querySelector("[data-report-result]");
+      var expertListContainer = document.querySelector("[data-expert-list]");
+      var expertEmptyState = document.querySelector("[data-expert-empty]");
+      var staticExpertCards = document.querySelectorAll("[data-static-expert]");
+      var doctorDetailName = document.querySelector("[data-doctor-name]");
+      var doctorDetailAvatar = document.querySelector("[data-doctor-avatar]");
+      var doctorDetailHeadline = document.querySelector("[data-doctor-headline]");
+      var doctorDetailMeta = document.querySelector("[data-doctor-meta]");
+      var doctorDetailIntro = document.querySelector("[data-doctor-intro]");
+      var doctorDetailSocial = document.querySelector("[data-doctor-social]");
+      var doctorDetailSpecialty = document.querySelector("[data-doctor-specialty]");
+      var albumInput = document.getElementById("album-input");
+      var fileInput = document.getElementById("file-input");
+      var userId = "demo-user";
+      var conversationId = "";
+      var conversationHistory = [];
+      var pendingUserMessage = "";
+      var profileCompleted = false;
+      var profilePanelId = "inline-profile-panel";
+      var currentProfileDraft = null;
+      var brandKnowledgeItems = [
+        {
+          type: "brand",
+          title: "品牌特点",
+          content: "启孕企鹅AI的品牌特点是温和、专业、清晰、克制，优先帮助用户把问题梳理明白，再给可执行的下一步。回答要像备孕健康管理助手，而不是医生诊断助手；输出要自然导向补档案、拍照查报告、查看专家团队、预约门诊或互联网医院复核。",
+          tags: ["品牌特点", "品牌定位", "首页AI", "导诊转化"]
+        },
+        {
+          type: "policy",
+          title: "话术边界",
+          content: "首页AI只做健康咨询、科普问答、远程健康管理和导诊推荐，不输出诊断结论、处方、用药方案、是否患病判断或替代医生诊疗的内容。涉及出血、腹痛、发热、妊娠异常、用药、手术方案、是否继续用药、是否换方案时，必须提示尽快转医生或互联网医院。",
+          tags: ["话术边界", "高风险拦截", "医生复核", "合规"]
+        },
+        {
+          type: "brand",
+          title: "AI回复结构",
+          content: "所有普通问题统一采用四段式：先解释问题属于哪一类，再给通用建议，再提示何时需要医生确认，最后轻度导流到补档案、拍照查报告、专家团队或门诊服务。",
+          tags: ["回复结构", "四段式", "首页对话", "品牌口径"]
+        }
+      ];
+      var brandHistoryTurn = {
+        role: "system",
+        content: "你是启孕企鹅小程序的AI助手。请用温和、专业、清晰、克制的风格，先帮助用户把问题梳理明白，再给可执行的下一步。你只做健康咨询、科普问答、远程健康管理和导诊推荐，不输出诊断结论、处方、用药方案、是否患病判断或替代医生诊疗的内容。高风险内容（出血、腹痛、发热、妊娠异常、用药、手术方案、是否继续用药、是否换方案）必须提示尽快转医生或互联网医院。回答要自然，不要像提纲，也不要显式输出规则标题。"
+      };
+      var welcomeTurn = {
+        role: "assistant",
+        content: "你好，我是启孕企鹅 AI。你可以直接问我备孕、报告、用药边界、医生团队或就诊建议相关问题，我会先帮你梳理，再告诉你下一步怎么做。"
+      };
+
+      function scrollChatToBottom() {
+        if (!chatViewport) return;
+        chatViewport.scrollTop = chatViewport.scrollHeight;
+      }
+
+      function escapeHtml(text) {
+        return String(text || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatMessage(text) {
+        return escapeHtml(text).replace(/\n/g, "<br>");
+      }
+
+      function appendBubble(role, html) {
+        if (!chatStream) return null;
+        var bubble = document.createElement("div");
+        bubble.className = "chat-bubble " + role;
+        bubble.innerHTML = html;
+        chatStream.appendChild(bubble);
+        scrollChatToBottom();
+        return bubble;
+      }
+
+      function escapeForAttr(text) {
+        return escapeHtml(text).replace(/"/g, "&quot;");
+      }
+
+      function renderExpertCard(doctor) {
+        var avatarMap = {
+          "杨会生": "./doctor-1.png",
+          "任洪樟": "./doctor-2.png",
+          "刘淑平": "./doctor-3.png",
+          "王俊玲": "./doctor-4.png"
+        };
+        var introHtml = (doctor.introLines || []).map(function (line) {
+          return "<p>" + escapeHtml(line) + "</p>";
+        }).join("");
+        var meta = [doctor.department, doctor.fromYears].filter(Boolean).join(" · ");
+        var headlineHtml = doctor.headline ? '<div class="expert-headline"><strong>头衔：</strong>' + escapeHtml(doctor.headline) + '</div>' : "";
+        var introContent = doctor.cardIntro ? '<p>' + escapeHtml(doctor.cardIntro) + '</p>' : introHtml;
+        return '' +
+        '<div class="expert-card expert-card-featured" data-doctor-card="' + escapeHtml(doctor.name || "") + '">' +
+            '<div class="expert-card-top">' +
+              '<div class="expert-head-row">' +
+                '<img class="expert-avatar" src="' + escapeHtml(doctor.avatar || avatarMap[doctor.name] || "./doctor-1.png") + '" alt="' + escapeHtml(doctor.name || "专家") + '" />' +
+                '<div class="expert-info">' +
+                  '<div class="expert-name-row">' +
+                    '<div class="expert-name">' + escapeHtml(doctor.name || "") + '</div>' +
+                    '<div class="expert-role">' + escapeHtml(doctor.title || "") + '</div>' +
+                  '</div>' +
+                  '<div class="expert-meta">' + escapeHtml(meta) + '</div>' +
+                  headlineHtml +
+                '</div>' +
+              '</div>' +
+              '<p class="expert-specialty"><strong>特长：</strong>' + escapeHtml(doctor.cardSpecialty || doctor.specialty || (doctor.specialtyTags || []).join("、") || "暂无") + '</p>' +
+            '</div>' +
+          '<div class="expert-intro">' + (introContent || '<p>暂无简介</p>') + '</div>' +
+          '</div>';
+      }
+
+      var doctorStore = {
+        "杨会生": {
+          name: "杨会生",
+          avatar: "./doctor-1.png",
+          headline: "医学博士 · 针灸生殖专家 · 调经促孕十三针传承人",
+          meta: "主治医师 · 中医针灸科",
+          intro: "目前任职于深圳市妇幼保健院针灸科，毕业于中国中医科学院，师从“调经促孕十三针”创始人、针灸助孕名家、国家中医药领军人才岐黄学者、首席研究员房繄恭教授。研究方向为针灸生殖效应的循证评价及效应机制研究，从事生殖障碍疾病的临床与科研工作，提倡“壮精调经、夫妻同治”，开设针灸生殖门诊和卵巢早衰针灸专病门诊，年门诊量1.5万人次。",
+          social: "中国针灸学会妇科生殖专业委员会会员；中国针灸学会治未病专业委员会委员；中国针灸学会与世界针灸联合会卵巢早衰联盟核心成员；广东省中医药学会生殖医学专委会委员。",
+          specialty: "生殖障碍、卵巢功能障碍、盆底功能障碍疾病；调经促孕十三针、房氏火龙灸、三调助孕针法、益精助阳针法、盆底针法、调泌疏肝穴位埋线。"
+        },
+        "刘淑平": {
+          name: "刘淑平",
+          avatar: "./doctor-3.png",
+          headline: "深圳生殖健康多学科MDT分会委员 · 国家二级心理咨询师",
+          meta: "主治医师 · 妇科",
+          intro: "曾就职深圳市南山妇幼保健院妇科，师从南方医科大学教授、深圳市医学会副会长吴若松教授。关注复发性流产、不孕不育、输卵管不通和反复种植失败。",
+          social: "深圳生殖健康多学科MDT分会委员；国家二级心理咨询师。",
+          specialty: "复发性流产、不孕不育、输卵管不通、反复种植失败。"
+        },
+        "任洪樟": {
+          name: "任洪樟",
+          avatar: "./doctor-2.png",
+          headline: "省级名中医 · 教授 · 从医50余年",
+          meta: "主任中医师 · 中医科",
+          intro: "毕业于黑龙江中医药大学，广东省名老中医专家学术经验传承工作指导老师，2002年评为黑龙江省名中医，从医五十余年，精通经方的临床应用，具有坚实的中医功底，临床经验丰富，疗效突出，善于研究总结并形成自己的学术思路用药风格。",
+          social: "省级先进个人，专业技术拔尖人材，享受政府科技人才津贴；生于三世中医世家，自幼承传家技，一九六六年从师学徒毕业后，从事内科临床工作；八十年代进修于中国中医研究院西苑医院，为北京市名中医王占玺先生薪传弟子；九十年代进修于黑龙江省中医研究院，得国医大师张琪培养，受益良多。",
+          specialty: "呼吸、消化、心脑血管、神经、内分泌代谢、泌尿；妇科、男性不育、肿瘤术后调治。"
+        },
+        "王俊玲": {
+          name: "王俊玲",
+          avatar: "./doctor-4.png",
+          headline: "妇科医教研30余年 · 广东省名中医",
+          meta: "主任中医师 · 妇产科",
+          intro: "广东省名中医，主任中医师，博士研究生学历，硕士研究生导师，毕业于广州中医药大学，从事中医妇产科临床、教学、科研工作30余年，擅长采用中西医结合的方法治疗妇产科疑难疾病，是广东省名中医，广东省首批名中医学术继承指导老师。",
+          social: "广东省中西医结合学会综合医院中医专委会常务委员；广东省中医药学会妇科专委会委员；广东省中西医结合学会妇科专委会委员；深圳市中医药学会及中西医结合学会常务理事；深圳市中西医结合学会妇产科专委会副主任委员。",
+          specialty: "多囊卵巢综合征、子宫内膜异位症、异常子宫出血、不孕不育、反复自然流产、月经不调、卵巢早衰、高泌乳素血症、急慢性盆腔炎、黄褐斑、更年期综合征、失眠、亚健康、延缓衰老、孕期健康管理。"
+        }
+      };
+
+      function openDoctorDetail(name) {
+        var doctor = doctorStore[name];
+        if (!doctor || !overlayMap.doctorDetail) return;
+        if (doctorDetailName) doctorDetailName.textContent = doctor.name || "医生详情";
+        if (doctorDetailAvatar) {
+          doctorDetailAvatar.style.backgroundImage = 'url("' + (doctor.avatar || "./doctor-1.png") + '")';
+          doctorDetailAvatar.style.backgroundSize = "cover";
+          doctorDetailAvatar.style.backgroundPosition = "center";
+        }
+        if (doctorDetailHeadline) doctorDetailHeadline.textContent = doctor.headline || "";
+        if (doctorDetailMeta) doctorDetailMeta.textContent = doctor.meta || "";
+        if (doctorDetailIntro) doctorDetailIntro.textContent = doctor.intro || "暂无";
+        if (doctorDetailSocial) doctorDetailSocial.textContent = doctor.social || "暂无";
+        if (doctorDetailSpecialty) doctorDetailSpecialty.textContent = doctor.specialty || "暂无";
+        overlayMap.doctorDetail.classList.add("active");
+      }
+
+      async function syncBrandKnowledge() {
+        try {
+          var response = await fetch(API_BASE + "/knowledge");
+          var payload = await response.json();
+          var existing = payload && payload.success && Array.isArray(payload.data) ? payload.data : [];
+          var existingKeys = {};
+          existing.forEach(function (item) {
+            existingKeys[(item.type || "") + "::" + (item.title || "")] = true;
+          });
+
+          for (var i = 0; i < brandKnowledgeItems.length; i += 1) {
+            var item = brandKnowledgeItems[i];
+            var key = item.type + "::" + item.title;
+            if (existingKeys[key]) continue;
+            await postJson(API_BASE + "/knowledge", item);
+          }
+        } catch (error) {
+          // 知识库同步失败不影响页面主流程
+        }
+      }
+
+      function renderExpertList(items) {
+        if (!expertListContainer) return;
+        var doctors = items || [];
+        if (!doctors.length) {
+          if (expertEmptyState) {
+            expertEmptyState.style.display = "block";
+            expertEmptyState.textContent = "暂时没有专家数据，稍后再试。";
+          }
+          expertListContainer.innerHTML = "";
+          return;
+        }
+        if (expertEmptyState) {
+          expertEmptyState.style.display = "none";
+        }
+        if (staticExpertCards && staticExpertCards.length) {
+          staticExpertCards.forEach(function (node) { node.style.display = "none"; });
+        }
+        expertListContainer.innerHTML = doctors.map(renderExpertCard).join("");
+      }
+
+      async function loadExperts() {
+        if (!expertListContainer) return;
+        if (expertEmptyState) {
+          expertEmptyState.style.display = "block";
+          expertEmptyState.textContent = "正在加载专家列表…";
+        }
+        try {
+          var response = await fetch(API_BASE + "/experts");
+          var payload = await response.json();
+          var doctors = payload && payload.success && payload.data ? payload.data : [];
+          renderExpertList(doctors);
+        } catch (error) {
+          if (expertEmptyState) {
+            expertEmptyState.style.display = "block";
+            expertEmptyState.textContent = "专家列表加载失败，请稍后重试。";
+          }
+        }
+      }
+
+      function setReportResult(html) {
+        if (!reportResult) return;
+        reportResult.innerHTML = html;
+      }
+
+      async function analyzeReportFromInput(fileName, imageText) {
+        setReportResult('<strong>正在分析报告…</strong><br>请稍等，系统正在结合识别结果和用户档案进行判断。');
+        try {
+          var response = await postJson(API_BASE + "/report/analyze", {
+            reportId: fileName || "",
+            userId: userId,
+            imageText: imageText || fileName || "",
+            imageUrl: ""
+          });
+          if (response && response.success && response.data) {
+            var result = response.data;
+            setReportResult(
+              '<strong>分析结果</strong><br>' +
+              escapeHtml(result.summary || "") + '<br><br>' +
+              '<strong>建议</strong><br>' + escapeHtml((result.nextActions || []).join("、")) + '<br><br>' +
+              '<strong>分流</strong><br>' + escapeHtml(result.needHumanHandoff ? "建议转医生复核：" + result.handoffTarget : "当前可继续由AI辅助分析")
+            );
+            appendBubble("ai", '<strong>报告分析</strong>' + escapeHtml(result.summary || "已完成初步分析。"));
+          } else {
+            setReportResult("报告分析暂时失败，请稍后重试。");
+          }
+        } catch (error) {
+          setReportResult("报告分析暂时失败，请稍后重试。");
+        }
+      }
+
+      function ensureChatStarted() {
+        if (!chatStream) return;
+        if (chatStream.children.length > 0) return;
+        chatStream.innerHTML = "";
+        scrollChatToBottom();
+      }
+
+      function renderProfilePanel(questionText) {
+        if (!chatStream) return;
+        var existing = document.getElementById(profilePanelId);
+        if (existing) existing.remove();
+        currentProfileDraft = questionText || "";
+        var panel = document.createElement("div");
+        panel.id = profilePanelId;
+        panel.className = "intake-card";
+        panel.innerHTML = '' +
+          '<div class="intake-head"><span class="intake-dot"></span><strong>完善基础档案后继续提问</strong></div>' +
+          '<p class="intake-sub">请先补充年龄、备孕时长、是否有相关情况。提交后，我会结合你的档案、知识库和问题一起回复。</p>' +
+          '<div class="intake-fields">' +
+            '<div class="field-row"><div class="field-label">年龄</div><select class="field-select" data-age-select><option value="" selected>请选择</option><option>22 岁</option><option>23 岁</option><option>24 岁</option><option>25 岁</option><option>26 岁</option><option>27 岁</option><option>28 岁</option><option>29 岁</option><option>30 岁</option><option>31 岁</option><option>32 岁</option><option>33 岁</option><option>34 岁</option><option>35 岁</option><option>36 岁</option><option>37 岁</option><option>38 岁</option><option>39 岁</option><option>40 岁</option><option>41 岁及以上</option></select></div>' +
+            '<div class="field-row"><div class="field-label">备孕时长</div><select class="field-select" data-duration-select><option value="" selected>请选择</option><option>0-3 个月</option><option>4-6 个月</option><option>7-12 个月</option><option>12-18 个月</option><option>18 个月以上</option></select></div>' +
+            '<div class="field-row"><div class="field-label">有无病状</div><div class="toggle-row" data-condition-toggle><div class="toggle-pill" data-condition-state="yes">有</div><div class="toggle-pill active" data-condition-state="no">无</div></div></div>' +
+            '<div class="condition-grid" data-condition-list style="display:none"><div class="condition-chip">多囊卵巢</div><div class="condition-chip">月经不规律</div><div class="condition-chip">AMH 偏低</div><div class="condition-chip">输卵管不通</div><div class="condition-chip">子宫内膜异位症</div><div class="condition-chip">复发性流产</div></div>' +
+            '<div class="intake-footer"><button class="intake-confirm" type="button">提交档案并继续</button></div>' +
+          '</div>';
+        chatStream.appendChild(panel);
+
+        var ageSelect = panel.querySelector("[data-age-select]");
+        var durationSelect = panel.querySelector("[data-duration-select]");
+        var conditionToggle = panel.querySelector("[data-condition-toggle]");
+        var conditionList = panel.querySelector("[data-condition-list]");
+        var conditionChips = conditionList ? Array.prototype.slice.call(conditionList.querySelectorAll(".condition-chip")) : [];
+
+        if (conditionToggle && conditionList) {
+          var togglePills = Array.prototype.slice.call(conditionToggle.querySelectorAll(".toggle-pill"));
+          togglePills.forEach(function (pill) {
+            pill.addEventListener("click", function () {
+              togglePills.forEach(function (node) { node.classList.remove("active"); });
+              pill.classList.add("active");
+              var hasCondition = pill.getAttribute("data-condition-state") === "yes";
+              conditionList.style.display = hasCondition ? "flex" : "none";
+              conditionList.querySelectorAll(".condition-chip").forEach(function (chip) {
+                chip.classList.remove("active");
+              });
+              if (hasCondition) {
+                var firstChip = conditionList.querySelector(".condition-chip");
+                if (firstChip) firstChip.classList.add("active");
+              }
+            });
+          });
+        }
+        if (ageSelect) ageSelect.addEventListener("change", scrollChatToBottom);
+        if (durationSelect) durationSelect.addEventListener("change", scrollChatToBottom);
+        conditionChips.forEach(function (chip) {
+          chip.addEventListener("click", function () {
+            chip.classList.toggle("active");
+          });
+        });
+        var confirmBtn = panel.querySelector(".intake-confirm");
+        if (confirmBtn) {
+          confirmBtn.addEventListener("click", function () {
+            submitProfileAndContinue();
+          });
+        }
+        scrollChatToBottom();
+      }
+
+      function getCurrentProfilePayload() {
+        var ageSelect = chatStream ? chatStream.querySelector("[data-age-select]") : null;
+        var durationSelect = chatStream ? chatStream.querySelector("[data-duration-select]") : null;
+        var conditionToggle = chatStream ? chatStream.querySelector("[data-condition-toggle]") : null;
+        var conditionList = chatStream ? chatStream.querySelector("[data-condition-list]") : null;
+        var activeConditions = conditionList ? Array.prototype.slice.call(conditionList.querySelectorAll(".condition-chip.active")) : [];
+        var activeToggle = conditionToggle ? conditionToggle.querySelector(".toggle-pill.active") : null;
+
+        return {
+          age: ageSelect && ageSelect.value ? Number(ageSelect.value.match(/\d+/)) : null,
+          tryingDuration: durationSelect && durationSelect.value ? durationSelect.value : null,
+          hasCondition: activeToggle ? activeToggle.getAttribute("data-condition-state") === "yes" : null,
+          conditions: activeConditions.map(function (chip) { return chip.textContent.trim(); })
+        };
+      }
+
+      async function postJson(url, body) {
+        var response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        return response.json();
+      }
+
+      async function sendToBackend(message, profileOverride) {
+        var hiddenHistory = [brandHistoryTurn];
+        if (conversationHistory.length > 0 && conversationHistory[0] && conversationHistory[0].role === "system") {
+          hiddenHistory = [];
+        }
+        var payload = {
+          conversationId: conversationId || "",
+          userId: userId,
+          message: message,
+          profile: profileOverride || null,
+          history: hiddenHistory.concat(conversationHistory.slice(-12))
+        };
+        var data = await postJson(API_BASE + "/chat/send", payload);
+        if (!data || !data.success || !data.data) {
+          throw new Error("bad response");
+        }
+        conversationId = data.data.conversationId || conversationId;
+        return data.data;
+      }
+
+      function pushHistory(role, content) {
+        conversationHistory.push({ role: role, content: content });
+      }
+
+      async function sendChatMessageNow(text, options) {
+        options = options || {};
+        var content = (text || "").trim();
+        if (!content || !chatStream) return;
+        ensureChatStarted();
+        if (!profileCompleted && !options.skipProfileGate) {
+          appendBubble("user", formatMessage(content));
+          pushHistory("user", content);
+          pendingUserMessage = content;
+          renderProfilePanel(content);
+          return;
+        }
+        if (!options.skipUserBubble) {
+          appendBubble("user", formatMessage(content));
+          pushHistory("user", content);
+        } else {
+          if (!options.skipUserHistory) {
+            pushHistory("user", content);
+          }
+        }
+        if (messageInput) {
+          messageInput.value = "";
+        }
+        var loadingBubble = appendBubble("ai", "<strong>产品 AI</strong>正在整理你的问题…");
+        try {
+          var reply = await sendToBackend(content, options.profileOverride || null);
+          if (loadingBubble && loadingBubble.parentNode) loadingBubble.remove();
+          appendBubble("ai", formatMessage(reply.answer || "我暂时没有拿到回复，请稍后再试。"));
+          pushHistory("assistant", reply.answer || "");
+        } catch (error) {
+          if (loadingBubble && loadingBubble.parentNode) loadingBubble.remove();
+          appendBubble("ai", '<strong>产品 AI</strong>当前服务暂时不可用，先给你一个简要提示：请继续补充基础信息，我会结合你的情况进一步分析。');
+          pushHistory("assistant", "当前服务暂时不可用");
+        }
+      }
+
+      async function submitProfileAndContinue() {
+        if (!chatStream) return;
+        var profile = getCurrentProfilePayload();
+        try {
+          await postJson(API_BASE + "/profile/" + userId, profile);
+        } catch (error) {
+          // 档案保存失败不阻塞后续对话
+        }
+        var summary = [
+          profile.age ? profile.age + "岁" : "未选择年龄",
+          profile.tryingDuration || "未选择备孕时长",
+          profile.hasCondition ? "有病症" : "无病症"
+        ].join("，");
+        if (profile.hasCondition && profile.conditions && profile.conditions.length) {
+          summary += "；" + profile.conditions.join("、");
+        }
+        profileCompleted = true;
+        currentProfileDraft = null;
+        var gate = document.getElementById(profilePanelId);
+        if (gate) gate.remove();
+        if (pendingUserMessage) {
+          var firstQuestion = pendingUserMessage;
+          pendingUserMessage = "";
+          await sendChatMessageNow(firstQuestion, { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
+        }
+      }
+
+      if (chatViewport && chatStream) {
+        promptTags.forEach(function (tag) {
+          tag.addEventListener("click", function () {
+            if (chatStream.children.length === 0) {
+              ensureChatStarted(tag.textContent.trim());
+              pendingUserMessage = "我想先看看“" + tag.textContent.trim() + "”。";
+              if (messageInput) {
+                messageInput.value = pendingUserMessage;
+              }
+              return;
+            }
+            sendChatMessageNow("我想先看看“" + tag.textContent.trim() + "”。");
+            if (messageInput) {
+              messageInput.value = "我想先看看“" + tag.textContent.trim() + "”。";
+            }
+          });
+        });
+      }
+
+      function sendCurrentMessage() {
+        if (!chatStream || !messageInput) return;
+        var text = messageInput.value.trim();
+        if (!text) return;
+        ensureChatStarted();
+        sendChatMessageNow(text);
+      }
+
+      if (messageInput) {
+        messageInput.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendCurrentMessage();
+          }
+        });
+      }
+
+      if (sendButton) {
+        sendButton.addEventListener("click", sendCurrentMessage);
+      }
+
+      ensureChatStarted();
+
+      syncBrandKnowledge();
+
+      if (expertListContainer) {
+        expertListContainer.addEventListener("click", function (event) {
+          var card = event.target.closest ? event.target.closest("[data-doctor-card]") : null;
+          if (!card) return;
+          openDoctorDetail(card.getAttribute("data-doctor-card") || "");
+        });
+      }
+
+      staticExpertCards.forEach(function (card) {
+        card.addEventListener("click", function () {
+          openDoctorDetail(card.querySelector(".expert-name") ? card.querySelector(".expert-name").textContent.trim() : "");
+        });
+      });
+
+      function closeAll() {
+        Object.keys(overlayMap).forEach(function (key) {
+          overlayMap[key].classList.remove("active");
+        });
+      }
+
+      function openOverlay(name) {
+        if (!overlayMap[name]) return;
+        overlayMap[name].classList.add("active");
+      }
+
+      document.querySelectorAll("[data-open]").forEach(function (node) {
+        node.addEventListener("click", function () {
+          var closeName = node.getAttribute("data-close");
+          if (closeName && overlayMap[closeName]) {
+            overlayMap[closeName].classList.remove("active");
+          }
+          var openName = node.getAttribute("data-open");
+          openOverlay(openName);
+          if (openName === "expert") {
+            loadExperts();
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-close]").forEach(function (node) {
+        node.addEventListener("click", function (event) {
+          var name = node.getAttribute("data-close");
+          if (name && overlayMap[name]) {
+            overlayMap[name].classList.remove("active");
+          } else {
+            closeAll();
+          }
+          if (event.currentTarget.hasAttribute("data-open")) {
+            openOverlay(event.currentTarget.getAttribute("data-open"));
+          }
+        });
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeAll();
+        }
+      });
+
+      if (albumInput) {
+        albumInput.addEventListener("change", function () {
+          var file = albumInput.files && albumInput.files[0];
+          if (!file) return;
+          if (reportResult) {
+            setReportResult('<strong>已选择相册图片</strong><br>' + escapeHtml(file.name) + '<br>正在分析…');
+          }
+          analyzeReportFromInput(file.name, file.name);
+        });
+      }
+
+      if (fileInput) {
+        fileInput.addEventListener("change", function () {
+          var file = fileInput.files && fileInput.files[0];
+          if (!file) return;
+          if (reportResult) {
+            setReportResult('<strong>已选择文件</strong><br>' + escapeHtml(file.name) + '<br>正在分析…');
+          }
+          analyzeReportFromInput(file.name, file.name);
+        });
+      }
+
+      var shutterButton = document.querySelector(".shutter");
+      if (shutterButton) {
+        shutterButton.addEventListener("click", function () {
+          if (reportResult) {
+            setReportResult("<strong>拍照中…</strong><br>请先选择相册或文件上传，当前页面暂不直接调用系统相机。");
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
