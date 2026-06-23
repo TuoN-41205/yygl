@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: qy-penguin-backend
+    env: python
+    rootDir: backend
+    buildCommand: ""
+    startCommand: python demo_backend.py
+    autoDeploy: true
