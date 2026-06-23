@@ -3296,6 +3296,7 @@
       async function submitProfileAndContinue() {
         if (!chatStream) return;
         var confirmBtn = chatStream.querySelector(".intake-confirm");
+        var queuedQuestion = (pendingUserMessage || (messageInput && messageInput.value && messageInput.value.trim()) || "").trim();
         if (confirmBtn) {
           confirmBtn.disabled = true;
           confirmBtn.textContent = "提交中...";
@@ -3324,12 +3325,12 @@
           confirmBtn.disabled = false;
           confirmBtn.textContent = "提交档案并继续";
         }
-        if (pendingUserMessage) {
-          var firstQuestion = pendingUserMessage;
-          pendingUserMessage = "";
-          await sendChatMessageNow(firstQuestion, { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
-        } else if (messageInput && messageInput.value.trim()) {
-          await sendChatMessageNow(messageInput.value.trim(), { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
+        pendingUserMessage = "";
+        if (messageInput) {
+          messageInput.value = "";
+        }
+        if (queuedQuestion) {
+          await sendChatMessageNow(queuedQuestion, { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
         }
       }
 
