@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:8080}
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: qingyun-penguin-ai-backend
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  ai:
+    enabled: ${QYP_AI_ENABLED:false}
+    base-url: ${QYP_AI_BASE_URL:}
+    api-key: ${QYP_AI_API_KEY:}
+    model: ${QYP_AI_MODEL:5.4-mini-low}
+    chat-path: ${QYP_AI_CHAT_PATH:/v1/chat/completions}
+    timeout-seconds: ${QYP_AI_TIMEOUT_SECONDS:30}
+  policy:
+    high-risk-enabled: true
