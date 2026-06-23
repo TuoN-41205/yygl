@@ -3295,6 +3295,11 @@
 
       async function submitProfileAndContinue() {
         if (!chatStream) return;
+        var confirmBtn = chatStream.querySelector(".intake-confirm");
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = "提交中...";
+        }
         var profile = getCurrentProfilePayload();
         try {
           await postJson(API_BASE + "/profile/" + userId, profile);
@@ -3313,10 +3318,18 @@
         currentProfileDraft = null;
         var gate = document.getElementById(profilePanelId);
         if (gate) gate.remove();
+        appendBubble("ai", '<strong>档案已提交</strong>我已记录你的基础信息，可以继续提问了。');
+        scrollChatToBottom();
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = "提交档案并继续";
+        }
         if (pendingUserMessage) {
           var firstQuestion = pendingUserMessage;
           pendingUserMessage = "";
           await sendChatMessageNow(firstQuestion, { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
+        } else if (messageInput && messageInput.value.trim()) {
+          await sendChatMessageNow(messageInput.value.trim(), { skipUserBubble: true, skipUserHistory: true, profileOverride: profile });
         }
       }
 
