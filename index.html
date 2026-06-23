@@ -3257,6 +3257,32 @@
         conversationHistory.push({ role: role, content: content });
       }
 
+      function createFallbackAnswer(message, profile) {
+        var text = (message || "").trim();
+        var age = profile && profile.age ? profile.age + "岁" : "";
+        var duration = profile && profile.tryingDuration ? profile.tryingDuration : "";
+        var hasCondition = profile && profile.hasCondition;
+        var conditions = profile && profile.conditions && profile.conditions.length ? profile.conditions.join("、") : "";
+        if (/叶酸|备孕吃什么/.test(text)) {
+          return "备孕阶段一般建议优先保证叶酸补充，通常会结合年龄、备孕时长和既往情况一起看。如果你已经有基础档案，后续我可以帮你继续细化饮食和补充方案。";
+        }
+        if (/月经.*不规律|月经不规律/.test(text)) {
+          return "月经不规律时，建议先结合年龄、备孕时长、是否有多囊卵巢、AMH 和基础卵泡情况一起判断。你可以把相关检查资料补充完整，我再帮你拆成更具体的下一步。";
+        }
+        if (/AMH/.test(text)) {
+          return "AMH 更适合作为卵巢储备的参考指标之一，不能单独下结论。通常要结合年龄、基础卵泡数、月经情况和其他激素一起综合判断。";
+        }
+        if (/促排|卵泡|试管/.test(text)) {
+          return "如果进入促排或试管前准备阶段，通常建议先把基础档案、既往检查和医生关注的问题整理完整，再根据结果决定下一步方案。";
+        }
+        var profileText = [];
+        if (age) profileText.push("你当前年龄是" + age);
+        if (duration) profileText.push("备孕时长为" + duration);
+        if (hasCondition !== null && hasCondition !== undefined) profileText.push(hasCondition ? "有相关情况" : "暂未填写相关情况");
+        if (conditions) profileText.push("已填写：" + conditions);
+        return "我先根据你现有信息做一个简要判断。" + (profileText.length ? "（" + profileText.join("，") + "）" : "") + " 你可以继续补充基础信息，我会再帮你往下分析。";
+      }
+
       async function sendChatMessageNow(text, options) {
         options = options || {};
         var content = (text || "").trim();
@@ -3288,8 +3314,9 @@
           pushHistory("assistant", reply.answer || "");
         } catch (error) {
           if (loadingBubble && loadingBubble.parentNode) loadingBubble.remove();
-          appendBubble("ai", '<strong>产品 AI</strong>当前服务暂时不可用，先给你一个简要提示：请继续补充基础信息，我会结合你的情况进一步分析。');
-          pushHistory("assistant", "当前服务暂时不可用");
+          var fallbackAnswer = createFallbackAnswer(content, options.profileOverride || getCurrentProfilePayload());
+          appendBubble("ai", formatMessage(fallbackAnswer));
+          pushHistory("assistant", fallbackAnswer);
         }
       }
 
